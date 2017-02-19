@@ -1,3 +1,4 @@
+-- bubble sort
 iter :: [Int] -> (Bool,Int,[Int])
 iter []     = (False,0,[])
 iter (x:[]) = (False,0,(x:[]))

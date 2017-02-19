@@ -1,3 +1,5 @@
+-- insertion sort
+
 is k [] = [k]
 is k (x:xs)
   | k <= x    = (k:x:xs)
