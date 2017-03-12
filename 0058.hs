@@ -4,7 +4,6 @@ dropIf op (x:xs) =
   then dropIf op xs
   else (x:(dropIf op xs))
 
-ans :: [Double] -> String
 ans [] = []
 ans (xa:ya:xb:yb:xc:yc:xd:yd:_) =
   let x1 = (xb-xa)
@@ -20,7 +19,7 @@ ans x = "NO"
 
 main = do
   c <- getContents
-  let i = map (map read) $ map words $ lines c :: [[Double]]
+  let i = map (map read) $ map words $ lines c :: [[Float]]
       i' = dropIf (== []) i
       o = map ans i'
   mapM_ putStrLn o
