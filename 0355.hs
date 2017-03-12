@@ -1,3 +1,7 @@
+-- 位置iからn文字を取り出す
+split i n s = drop i $ take (i+n) s
+--split i n s = take n $ drop i s
+
 set :: String -> Int -> Int -> Char -> String
 set u x y z =
   let h = take (x-1) u
@@ -7,8 +11,8 @@ set u x y z =
     h ++ b ++ f
 
 comp u a b c d =
-  let s = drop (a-1) $ take b u
-      t = drop (c-1) $ take d u
+  let s = split (a-1) (b-a+1) u
+      t = split (c-1) (d-c+1) u
   in
     if s > t
     then "t"
@@ -37,9 +41,10 @@ play u (("set":x:y:z:_):cmds) = do
   play u' cmds
 
 main = do
-  n <- getLine
+  _ <- getLine
   u <- getLine
-  q <- getLine
+  _ <- getLine
   c <- getContents
-  let i = map words $ lines c
+  let i  = map words $ lines c
+      u' = read u :: String
   play u i
