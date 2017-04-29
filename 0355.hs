@@ -1,6 +1,6 @@
 -- 位置iからn文字を取り出す
-split i n s = drop i $ take (i+n) s
---split i n s = take n $ drop i s
+--split i n s = drop i $ take (i+n) s
+split i n s = take n $ drop i s
 
 set :: String -> Int -> Int -> Char -> String
 set u x y z =
@@ -21,24 +21,24 @@ comp u a b c d =
       then "e"
       else "s"
 
-play :: String -> [[String]] -> IO()
-play _ [] = return ()
-play _ [[]] = return ()
-play u (("comp":a:b:c:d:_):cmds) = do
+play _ [] = []
+play _ [[]] = []
+play u (("comp":a:b:c:d:_):cmds) = 
   let a' = read a
       b' = read b
       c' = read c
       d' = read d
-      o  = comp u a' b' c' d'
-  putStrLn o
-  play u cmds
+      o  = u `seq` comp u a' b' c' d'
+  in
+    o:(play u cmds)
  
-play u (("set":x:y:z:_):cmds) = do
+play u (("set":x:y:z:_):cmds) =
   let x' = read x
       y' = read y
       z' = z!!0
-      u' = set u x' y' z'
-  play u' cmds
+      u' = u `seq` set u x' y' z'
+  in
+    play u' cmds
 
 main = do
   _ <- getLine
@@ -47,4 +47,5 @@ main = do
   c <- getContents
   let i  = map words $ lines c
       u' = read u :: String
-  play u i
+      o = play u i
+  mapM_ putStrLn o
