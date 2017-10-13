@@ -7,11 +7,20 @@ ans' 1 n s =
   else 0
   
 ans' n num s =
-  let num' = filter (\x -> s > x * n) num
+  let max' = maximum num
+      min' = minimum num
+      smax = max' * (n+1) * n `div`2
+      smin = min' * (n+1) * n `div`2
+      num' = filter (\x -> s > x * n) num
   in
-    if num' == []
+    if s > smax || s < smin
     then 0
-    else sum $ map (\v -> ans' (n-1) (delete v num) (s - n*v) ) num'
+    else if num' == []
+         then 0
+         else sum $ map (\v -> ans' (n-1) (delete v num) (s - n*v) ) num'
+--    if num' == []
+--    then 0
+--    else sum $ map (\v -> ans' (n-1) (delete v num) (s - n*v) ) num'
 
 ans [n,s] =
   ans' n [0..9] s
