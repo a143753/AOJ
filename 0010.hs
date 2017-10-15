@@ -1,47 +1,44 @@
-ans :: (Double,Double) -> (Double,Double) -> (Double,Double) -> (Double,Double,Double)
-ans (x1,y1) (x2,y2) (x3,y3)
-  | x1 == x2 && y1 == y3 = (0,0,0)
-  | y1 == y2 && x1 == x3 = (0,0,0)
-  | x1 == x2 = (0,0,0)
-  | y1 == y2 = (0,0,0)
-  | x1 == x3 = (0,0,0)
-  | y1 == y3 = (0,0,0)
-  | otherwise =
-  let
-    -- (x1,y1) (x2,y2)を通る直線 l : y = (y2-y1)/(x2-x1)*(x-x1) + y1
-    --                               y = (y2-y1)/(x2-x1)*x + y1 - x1*(y2-y1)/(x2-x1)
-    --                               y = a2 * x + b2   or x = x1 (x1=x2)
-    a2 = (y2-y1)/(x2-x1)
-    b2 = y1-x1*(y2-y1)/(x2-x1)
-    -- (x1,y1) (x3,y3)を通る直線 m : y = (y3-y1)/(x3-x1)*(x-x3) + y1
-    --                               y = a3 * x + b2   or x = x1
-    a3 = (y3-y1)/(x3-x1)
-    b3 = y1-x1*(y3-y1)/(x3-x1)
+import Text.Printf
 
-    -- lの垂直2等分線 l' : y = -1/a2 * (x-(x1+x2)/2) + (y1+y2)/2
-    --                     y = -1/a2 * x + (x1+x2)/2/a2 + (y1+y2)/2
-    --                     y = c2 * x + d2 or  y = y2 (y1=y2)
-    c2 = -1.0/a2
-    d2 = (x1+x2)/2/a2 + (y1+y2)/2
-    -- mの垂直2等分線 m' : y = -1/a3 * (x-(x1+x3)/2) + (y1+y3)/2
-    --                     y = -1/a3 * x + (x1+x3)/2/a3 + (y1+y3)/2
-    --                     y = c3 * x + d3 or  y 
-    c3 = -1.0/a3
-    d3 = (x1+x3)/2/a3 + (y1+y3)/2
+ans :: (Double,Double) -> (Double,Double) -> (Double,Double) -> [Double]
+ans (x1,y1) (x2,y2) (x3,y3) =
+  -- (x1-xp)^2 + (y1-yp)^2 = a
+  -- (x2-xp)^2 + (y2-yp)^2 = a
+  -- (x3-xp)^2 + (y3-yp)^2 = a
 
-    -- l'とm'の交点 (xp,yp)
-    -- yp = c2 * (yp-d3)/c3 + d2
-    -- c3*yp = c2*(yp-d3)+c3*d2
-    yp = (c3*d2-c2*d3) / (c3-c2)
-    xp = (yp - d3) * c3
-    r  = 0
+  -- x1^2 - 2*x1*xp + xp^2 + y1^2 - 2*y1*yp + yp^2 = a
+  -- x2^2 - 2*x2*xp + xp^2 + y2^2 - 2*y2*yp + yp^2 = a
+  -- x3^2 - 2*x3*xp + xp^2 + y3^2 - 2*y3*yp + yp^2 = a
+
+  -- x1^2-x2^2 - 2*(x1-x2)*xp + y1^2-y2^2 - 2*(y1-y2)*yp = 0
+  -- x1^2-x3^2 - 2*(x1-x3)*xp + y1^2-y3^2 - 2*(y1-y3)*yp = 0
+
+  -- A2 - B2 * xp + C2 - D2 * yp = 0
+  -- A3 - B3 * xp + C3 - D3 * yp = 0
+
+  -- A2*D3 - B2*D3*xp + C2*D3 - A3*D2 + B3*D2*xp - C3*D2 = 0
+  -- xp = (A2*D3 + C2*D3 - A3*D2 - C3*D2) / (B2*D3-B3*D2)
+  -- yp = (A2 + C2 - B2*xp) / D2
+
+  let a2 = x1^2 - x2^2
+      b2 = 2*(x1-x2)
+      c2 = y1^2 - y2^2
+      d2 = 2*(y1-y2)
+      a3 = x1^2 - x3^2
+      b3 = 2*(x1-x3)
+      c3 = y1^2 - y3^2
+      d3 = 2*(y1-y3)
+
+      xp = (a2*d3 + c2*d3 - a3*d2 - c3*d2) / (b2*d3-b3*d2)
+      yp = if d2 /= 0
+           then (a2+c2-b2*xp) / d2
+           else (a3+c3-b3*xp) / d3
+      r  = sqrt ( (x1-xp)^2 + (y1-yp)^2 )
   in
-    (a3,b3,r)
---    (xp,yp,r)
+    [xp,yp,r]
 
 main = do
   c <- getContents
   let i = map (map read) $ map words $ drop 1 $ lines c :: [[Double]]
       o = map (\(x1:y1:x2:y2:x3:y3:_) -> ans (x1,y1) (x2,y2) (x3,y3)) i
-
-  print o
+  mapM_ (\x -> printf "%.3f %.3f %.3f\n" (x!!0) (x!!1) (x!!2) ) o

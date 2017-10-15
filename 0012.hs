@@ -1,26 +1,23 @@
-inner_product (ax,ay) (bx,by) = ax * bx + ay * by
-vabs (ax,ay) = sqrt (ax*ax+ay*ay)
-vmul a (ax,ay) = (a*ax,a*ay)
-vadd (ax,ay) (bx,by) = (ax+bx,ay+by)
-vsub (ax,ay) (bx,by) = (ax-bx,ay-by)
-
-vcos a b = (inner_product a b) / (vabs a) / (vabs b)
-
-vatan (x,y) = atan2 y x
-vnorm (x,y) = x*x+y*y
-
-ans pa pb pc pp =
-  let apb = acos $ vcos (pa `vsub` pp) (pb `vsub` pp)
-      bpc = acos $ vcos (pb `vsub` pp) (pc `vsub` pp)
-      cpa = acos $ vcos (pc `vsub` pp) (pa `vsub` pp)
+chk (x1,y1) (x2,y2) (xp,yp) (xq,yq) = 
+  let dp = (y2-y1) / (x2-x1) * (xp-x1) + y1 - yp
+      dq = (y2-y1) / (x2-x1) * (xq-x1) + y1 - yq
   in
-    if apb + bpc + cpa >= 1.5*pi
+    if dp * dq >= 0
+    then True
+    else False
+
+ans (x1:y1:x2:y2:x3:y3:xp:yp:_) =
+  let c1 = chk (x1,y1) (x2,y2) (x3,y3) (xp,yp)
+      c2 = chk (x2,y2) (x3,y3) (x1,y1) (xp,yp)
+      c3 = chk (x3,y3) (x1,y1) (x2,y2) (xp,yp)
+  in
+    if c1 && c2 && c3
     then "YES"
     else "NO"
 
 main = do
   c <- getContents
   let i = map (map read) $ map words $ lines c :: [[Double]]
-      o = map (\ (xp0:yp0:xp1:yp1:xp2:yp2:xp3:yp3:_) -> ans (xp0,yp0) (xp1,yp1) (xp2,yp2) (xp3,yp3) ) i
+      o = map ans i
   mapM_ putStrLn o
   
