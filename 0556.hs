@@ -1,8 +1,18 @@
-ans n (a:b:_)
-  -- 左上の三角形にくるように座標変換する
-  | b <= a     = ((b-1) `mod` 3) + 1
-  | b <= (n-a) = ((a-1) `mod` 3) + 1
-  | otherwise  = ((n-b) `mod` 3) + 1
+cnv0 n x =
+  if x' >= n' then n - x else x'
+  where
+    x' = x - 1
+    n' = if n `mod` 2 == 0 then n `div` 2 else (n+1) `div` 2
+
+cnv1 (x,y) = if y > x then (y,x) else (x,y)
+  
+
+ans n (a:b:_) = 
+  let a' = cnv0 n a
+      b' = cnv0 n b
+      (a'',b'') = cnv1 (a',b')
+  in
+    (b'' `mod` 3) + 1
 
 main = do
   n <- getLine
