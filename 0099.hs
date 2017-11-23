@@ -1,3 +1,4 @@
+-- memory limit exceeded
 import Data.List
 import Text.Printf
 
