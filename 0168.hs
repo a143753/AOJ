@@ -1,7 +1,6 @@
-f 0 = 1
-f 1 = 1
-f 2 = 2
-f n = f (n-1) + f (n-2) + f (n-3)
+g 0 a b c = b
+g n a b c = g (n-1) (a+b+c) a b
+f n = g n 1 1 0
 
 ans i =
   let d = f i
@@ -16,4 +15,6 @@ main = do
   c <- getContents
   let i = takeWhile (/= 0) $ map read $ lines c :: [Int]
       o = map ans i
+      f'= map f [1..10]
+      g'= map (\n -> g n 1 1 0)  [1..10]
   mapM_ print o
