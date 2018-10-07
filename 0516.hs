@@ -1,23 +1,28 @@
-ans' k d =
-  if k > length d
-  then 0
-  else
-    let a = sum $ take k d
-        b = ans' k $ drop 1 d
-    in
-      if a > b
-      then a
-      else b
+msum k l s x x' =
+  if l >= k
+  then  s `seq` x `seq` s:(msum k (l-1) s' (tail x) (tail x'))
+  else []
+  where
+    s' = (s - (head x) + (head x'))
 
-ans ([0,0]:_) = []
-ans ([n,k]:x) =
-  let d = map head $ take n x
-      r = drop n x
+ans' n k x =
+  let s = sum $ take k x
+      x'= drop k x
+      y = msum k n s x x'
   in
-    (ans' k d):(ans r)
+    maximum y
+
+ans (l:ls) =
+  if n == 0 && k == 0
+  then []
+  else (ans' n k x):(ans r)
+  where
+    [n,k] = map read $ words l :: [Int]
+    x = map read $ take n ls :: [Int]
+    r = drop n ls
 
 main = do
   c <- getContents
-  let i = map (map read) $ map words $ lines c :: [[Int]]
+  let i = lines c
       o = ans i
   mapM_ print o
