@@ -1,11 +1,13 @@
--- wrong answer
-ans ([n,t]:x) =
-  let g = maximum $ map (\[x,h] -> h / x) x
+import Text.Printf
+
+ans ([n,t]:xx) =
+  let n' = ceiling n :: Int
+      g = maximum $ map (\[x,h] -> t * h / x) $ take n' xx
   in
-    t * g
+    g
     
 main = do
   c <- getContents
-  let i = map (map read) $ map words $ lines c :: [[Float]]
+  let i = map (map read) $ map words $ lines c :: [[Double]]
       o = ans i
-  print o
+  printf "%.6f\n" o
