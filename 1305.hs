@@ -21,7 +21,7 @@ look t (v:vs) =
     in
         if f == []
         then v:(look t vs)
-        else look t (f++vs)
+        else look t (nub $ f++vs)
 
 ans' d = 
     let t = map mktbl d 
