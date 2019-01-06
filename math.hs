@@ -58,3 +58,11 @@ ans [xa,ya,xb,yb,xc,yc,xd,yd] =
                          (yo <= yx ) && (yx <= yp) && (yq <= yx) && (yx <= yr)
                       then "YES"
                       else "NO"
+
+-- 組み合わせ
+combinations :: Int -> [a] -> [[a]]
+combinations n xs = comb n xs [] [] where
+  comb 0 _      ys zs = reverse ys : zs
+  comb _ []     _  zs = zs
+  comb n (x:xs) ys zs = comb (n - 1) xs (x:ys) (comb n xs ys zs)
+
