@@ -22,6 +22,29 @@ f :: [Int] -> [Int] -> Int
 f _ [] = 1
 f (p:ps) (v:ds) = p^(v-1) * (f ps ds)
 
+idx n = idx' n
+    where
+        idx' 1 = map (\i -> [i]) [1..n]
+        idx' k = 
+            let t = idx' (k-1)
+            in
+                concat $ map (\i -> map (\s -> i:s) t) [1..n]
+
+divide s =
+    let i = idx l
+        d = map (\j -> zip j s) i
+    in
+        map (\a -> filter (/= []) a) $ nub $ map f d
+    where
+        l = length s
+        f d = sort $ map (\ i -> map snd $ filter (\(j,v) -> i==j) d) [1..l]
+
+cal :: [[Int]] -> Int
+cal l =
+    let p = reverse $ sort $ map (\l0 -> foldl (\p a -> p * a) 1 l0) l
+    in
+        f primes p 
+
 -- |
 -- >>> ans 1
 -- 1
@@ -40,12 +63,13 @@ f (p:ps) (v:ds) = p^(v-1) * (f ps ds)
 -- >>> ans 8
 -- 24
 
-ans 1 = 1
+--ans 1 = 1
 ans n = 
     let d = reverse $ decomp primes n
-        a = f primes d
+        s = divide d
+        a = map cal s
     in
-        a
+        if a == [] then 1 else (minimum a)
 
 main = do
   l <- getLine
