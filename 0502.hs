@@ -1,12 +1,5 @@
--- (a,b,c,d,e,f)
---  e
---  a b c d
---  f
---  5
---  1 3 6 4
---  2
-
-m cmd [a,b,c,d,e,f] =
+move :: String -> [Int] -> [Int]
+move cmd (a:b:c:d:e:f:_) =
   case cmd of
     "North" -> [f,b,e,d,a,c]
     "East" ->  [d,a,b,c,e,f]
@@ -14,14 +7,17 @@ m cmd [a,b,c,d,e,f] =
     "South" -> [e,b,f,d,c,a]
     "Right" -> [a,e,c,f,d,b]
     "Left"  -> [a,f,c,e,b,d]
+move _ _ = []
 
+ans' :: Int -> [Int] -> [String] -> Int
 ans' s _ [] = s
 ans' s d (c:cs) =
-  let d' = m c d
+  let d' = move c d
       s' = head d'
   in
     ans' (s+s') d' cs
 
+ans :: [String] -> [Int]
 ans [] = []
 ans ("0":_) = []
 ans (n:x) =
@@ -33,8 +29,7 @@ ans (n:x) =
 
 main = do
   c <- getContents
-  let i = lines c
+  let i = map head $ map words $ lines c
       o = ans i
   mapM_ print o
 
--- runtime errorになる。原因不明。
