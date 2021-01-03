@@ -1,7 +1,7 @@
 ans :: [[Int]] -> [Int]
 ans ([0]:_) = []
 ans ([k]:l:xs) =
-  let d = ( k * (k-1) ) `div` 2
+  let d = k - 1
       a = sum l
   in
     (a`div`d):ans xs
