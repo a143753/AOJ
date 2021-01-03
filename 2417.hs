@@ -7,7 +7,9 @@ b 'L' = "i"
 b 'U' = "u"  
 b 'R' = "e"  
 b 'D' = "o"
-
+-- |
+-- >>> ans1 "0U"
+-- ["n","n"]
 ans1 [] = []
 ans1 ('0':'U':ls) = "n":"n":(ans1 ls)
 ans1 (l:ls) =
