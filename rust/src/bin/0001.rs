@@ -1,19 +1,16 @@
 fn read_input() -> Vec<i32> {
-    let mut a : Vec<i32> = Vec::new();
-    for _ in 0..10 {
-        let mut s = String::new();
-        std::io::stdin().read_line(&mut s).ok();
-        let ss = s.trim().parse().expect("nan");
-        a.push(ss);
-    }
-    a
+    (0..10)
+        .map(|_| {
+            let mut buf = String::new();
+            std::io::stdin().read_line(&mut buf).ok();
+            buf.trim().parse().expect("nan")
+        })
+        .collect()
 }
 
 fn main() {
     let mut a = read_input();
-    a.sort_by(|a,b| b.cmp(a));
-    for i in 0..3 {
-        println!("{}",a[i]);
-    }
+    a.sort_unstable_by(|a,b| b.cmp(a));
+    a.iter().take(3).for_each(|x| println!("{}", x));
 }
 
