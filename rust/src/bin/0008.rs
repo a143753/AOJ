@@ -25,11 +25,11 @@ fn ans(x:i32) -> i32 {
 }
 
 fn main() {
-    let stdin = std::io::stdin();
+    let reader = std::io::stdin();
 
-    for line in stdin.lock().lines() {
+    reader.lock().lines().for_each(|line|{
         let d : i32 = line.unwrap().parse().unwrap();
         let a = ans(d);
         println!("{:?}",a)
-    }
+    })
 }

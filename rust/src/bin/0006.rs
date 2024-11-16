@@ -1,10 +1,10 @@
-use std::io::prelude::*;
+use std::io;
 
 fn main() {
-    let stdin = std::io::stdin();
+    let mut line = String::new();
 
-    let l = stdin.lock().lines().next().unwrap().unwrap();
-    let a = l.chars().rev().collect::<String>();
+    io::stdin().read_line(&mut line).unwrap();
+    let a = line.trim().chars().rev().collect::<String>();
    
     println!("{}",a);
 }
