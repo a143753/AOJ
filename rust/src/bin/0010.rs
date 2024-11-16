@@ -29,15 +29,15 @@ fn ans(i:Vec<f64>) -> (f64,f64,f64) {
 }
 
 fn main() {
-    let stdin = std::io::stdin();
+    let reader = std::io::stdin();
 
-    let l = stdin.lock().lines().next().unwrap().unwrap();
-    let n = i32::from_str(&l).unwrap();
+    let l = reader.lock().lines().next().unwrap().unwrap();
+    let n = usize::from_str(&l).unwrap();
 
-    for _ in 0..n {
-        let s = stdin.lock().lines().next().unwrap().unwrap();
-        let d : Vec<f64> = s.split_whitespace().map(|x| f64::from_str(x).unwrap()).collect();
-        let (x,y,r) = ans(d);
-        println!("{:.3} {:.3} {:.3}",x,y,r);
-    }
+    reader.lock().lines().take(n).for_each(|line| {
+	let d : Vec<f64> = line.unwrap().split_whitespace().map(|x| f64::from_str(x).unwrap()).collect();
+	let (x,y,r) = ans(d);
+	println!("{:.3} {:.3} {:.3}",x,y,r);
+    });
+
 }
