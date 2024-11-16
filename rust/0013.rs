@@ -1,20 +1,32 @@
 use std::io::prelude::*;
 use std::str::FromStr;
 
-fn ans(d:i32,s:&mut Vec<i32>) {
-    if d == 0 {
-        let o = s.pop();
-        println!("{}",o.unwrap());
-    } else {
-        s.push(d);
-    }
+fn ans(d: Vec<i32>) -> Vec<i32> {
+    let mut s: Vec<i32> = Vec::new();
+    let mut a: Vec<i32> = Vec::new();
+
+    d.iter().for_each(|e| {
+        if *e == 0 {
+            let o = s.pop();
+            a.push(o.unwrap());
+        } else {
+            s.push(*e);
+        }
+    });
+    return a;
 }
 
 fn main() {
-    let stdin = std::io::stdin();
-    let mut s : Vec<i32> = Vec::new();
-    for line in stdin.lock().lines() {
-        let d = i32::from_str(&line.unwrap()).unwrap();
-        ans(d,&mut s);
-    }
+    let reader = std::io::stdin();
+    let d: Vec<i32> = reader
+        .lock()
+        .lines()
+        .map(|line| i32::from_str(&line.unwrap()).unwrap())
+        .collect();
+
+    let a = ans(d);
+
+    a.iter().for_each(|e| {
+        println!("{}", e);
+    });
 }
