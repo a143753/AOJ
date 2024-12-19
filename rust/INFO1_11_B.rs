@@ -7,7 +7,7 @@ fn main() {
         let binding = line.unwrap();
         let dt = binding.split_whitespace().collect::<Vec<_>>();
 
-        dt.iter().for_each(|dt| {
+        dt.iter().rev().for_each(|dt| {
             println!("{}", dt);
         });
     });
