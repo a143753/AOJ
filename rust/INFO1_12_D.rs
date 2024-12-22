@@ -34,22 +34,35 @@ where
 fn main() {
     let reader = std::io::stdin();
 
-    let nm = read_row_vec::<i32>(&mut reader.lock());
-    let n = nm[0];
-    let _m = nm[1];
+    let nmq = read_row_vec::<i32>(&mut reader.lock());
+    let n = nmq[0];
+    let m = nmq[1];
+    let q = nmq[2];
 
-    let array = read_matrix::<i32>(&mut reader.lock(), n);
+    let qry = read_matrix::<i32>(&mut reader.lock(), q);
 
-    let ij = read_matrix::<i32>(&mut reader.lock(), 2);
-    let i1 = ij[0][0];
-    let j1 = ij[0][1];
-    let i2 = ij[1][0];
-    let j2 = ij[1][1];
+    let mut array = vec![vec![0; m as usize]; n as usize];
 
-    (i1..=i2).for_each(|i| {
-        (j1..=j2).for_each(|j| {
-            print!("{} ", array[i as usize][j as usize]);
+    qry.iter().for_each(|row| {
+        let i1 = row[0];
+        let j1 = row[1];
+        let i2 = row[2];
+        let j2 = row[3];
+
+        (i1..=i2).for_each(|i| {
+            (j1..=j2).for_each(|j| {
+                array[i as usize][j as usize] += 1;
+            });
         });
-        println!();
+    });
+
+    array.iter().for_each(|row| {
+        println!(
+            "{}",
+            row.iter()
+                .map(|x| x.to_string())
+                .collect::<Vec<_>>()
+                .join(" ")
+        );
     });
 }
