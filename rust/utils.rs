@@ -59,6 +59,34 @@ where
 }
 
 // 入力
+// - reader: 標準入力 (std::io::StdinLock) の参照。これは入力を読み取るためのロックされた標準入力ストリームです。
+// - n: 読み取る行数を指定する整数 (i32)。
+
+// ### 出力
+// - Vec<T>: 読み取ったデータを格納するベクター。各行のデータは型 T にパースされます。
+
+// ### 詳細な説明
+// 1. 関数はまず空のベクター col を作成します。
+// 2. reader から n 行を読み取り、それぞれの行を文字列として取得します。
+// 3. 各行の文字列を型 T にパースし、パースに成功したデータをベクター col に追加します。
+// 4. 最終的に、すべてのデータが格納されたベクター col を返します。
+
+// ### 注意点
+// - 型 T は std::str::FromStr トレイトを実装している必要があります。つまり、文字列から型 T に変換できる必要があります。
+// - パースに失敗した場合は unwrap によりパニックが発生します。
+fn read_col_vec<T: std::str::FromStr>(reader: &mut std::io::StdinLock, n: i32) -> Vec<T>
+where
+    <T as std::str::FromStr>::Err: std::fmt::Debug,
+{
+    let mut col = Vec::new();
+    reader.lines().take(n as usize).for_each(|line| {
+        let d = line.unwrap().parse::<T>().unwrap();
+        col.push(d);
+    });
+    col
+}
+
+// 入力
 // - reader: &mut std::io::StdinLock:
 // - 標準入力のロックされたハンドルを受け取ります。このハンドルを使って標準入力からデータを読み取ります。
 // - n: i32:
