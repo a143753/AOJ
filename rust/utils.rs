@@ -60,7 +60,7 @@ where
 
 // 入力
 // - reader: 標準入力 (std::io::StdinLock) の参照。これは入力を読み取るためのロックされた標準入力ストリームです。
-// - n: 読み取る行数を指定する整数 (i32)。
+// - n: 読み取る行数を指定する整数 (usize)。
 
 // ### 出力
 // - Vec<T>: 読み取ったデータを格納するベクター。各行のデータは型 T にパースされます。
@@ -74,7 +74,7 @@ where
 // ### 注意点
 // - 型 T は std::str::FromStr トレイトを実装している必要があります。つまり、文字列から型 T に変換できる必要があります。
 // - パースに失敗した場合は unwrap によりパニックが発生します。
-fn read_col_vec<T: std::str::FromStr>(reader: &mut std::io::StdinLock, n: i32) -> Vec<T>
+fn read_col_vec<T: std::str::FromStr>(reader: &mut std::io::StdinLock, n: usize) -> Vec<T>
 where
     <T as std::str::FromStr>::Err: std::fmt::Debug,
 {
@@ -89,7 +89,7 @@ where
 // 入力
 // - reader: &mut std::io::StdinLock:
 // - 標準入力のロックされたハンドルを受け取ります。このハンドルを使って標準入力からデータを読み取ります。
-// - n: i32:
+// - n: usize:
 // - 読み取る行数を指定します。
 
 // #### 出力
@@ -107,7 +107,7 @@ where
 // - 型 T は std::str::FromStr トレイトを実装している必要があります。
 // - パースに失敗した場合は unwrap によりパニックが発生します。
 
-fn read_matrix<T: std::str::FromStr>(reader: &mut std::io::StdinLock, n: i32) -> Vec<Vec<T>>
+fn read_matrix<T: std::str::FromStr>(reader: &mut std::io::StdinLock, n: usize) -> Vec<Vec<T>>
 where
     <T as std::str::FromStr>::Err: std::fmt::Debug,
 {
