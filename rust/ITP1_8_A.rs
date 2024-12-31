@@ -1,17 +1,15 @@
 fn f(s: &str) -> String {
-    let mut r = String::new();
-
-    (0..s.len()).for_each(|i| {
-        let c = s.chars().nth(i).unwrap();
-        if c.is_uppercase() {
-            r.push_str(c.to_lowercase().collect::<String>().as_str());
-        } else if c.is_lowercase() {
-            r.push_str(c.to_uppercase().collect::<String>().as_str());
-        } else {
-            r.push(c);
-        }
-    });
-    r
+    s.chars()
+        .map(|c| {
+            if c.is_uppercase() {
+                c.to_lowercase().next().unwrap()
+            } else if c.is_lowercase() {
+                c.to_uppercase().next().unwrap()
+            } else {
+                c
+            }
+        })
+        .collect()
 }
 
 fn main() {
