@@ -128,3 +128,9 @@ fn read_line(reader: &mut std::io::StdinLock) -> String {
     reader.read_line(&mut buf).unwrap();
     buf.trim().to_string()
 }
+
+fn read_line_words(reader: &mut std::io::StdinLock) -> Vec<String> {
+    let mut buf = String::new();
+    reader.read_line(&mut buf).unwrap();
+    buf.split_whitespace().map(|x| x.to_string()).collect()
+}
