@@ -134,3 +134,39 @@ fn read_line_words(reader: &mut std::io::StdinLock) -> Vec<String> {
     reader.read_line(&mut buf).unwrap();
     buf.split_whitespace().map(|x| x.to_string()).collect()
 }
+
+// エラトステネスの篩
+fn primes(n: i32) -> Vec<i32> {
+    let mut t: Vec<i32> = (2..n).collect();
+    let nn = n as usize;
+
+    for p in 2..nn {
+        if t[p - 2] != 0 {
+            let mut q = p * 2;
+            while q < nn {
+                t[q - 2] = 0;
+                q += p;
+            }
+        }
+    }
+    t.into_iter().filter(|&x| x != 0).collect()
+}
+fn is_prime(n: i32) -> bool {
+    if n < 2 {
+        return false;
+    } else if n == 2 {
+        return true;
+    } else if n % 2 == 0 {
+        return false;
+    } else {
+        let nn = (n as f64).sqrt() as i32;
+        let mut i = 3;
+        while i <= nn {
+            if n % i == 0 {
+                return false;
+            }
+            i += 2;
+        }
+        return true;
+    }
+}
