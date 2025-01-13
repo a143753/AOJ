@@ -170,3 +170,16 @@ fn is_prime(n: i32) -> bool {
         return true;
     }
 }
+
+fn join(v: &Vec<(String, i32)>) -> String {
+    v.iter()
+        .map(|x| x.0.clone() + &x.1.to_string())
+        .collect::<Vec<_>>()
+        .join(" ")
+}
+fn join(v: &Vec<usize>) -> String {
+    v.iter()
+        .map(|x| x.to_string())
+        .collect::<Vec<_>>()
+        .join(" ")
+}
