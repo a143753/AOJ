@@ -79,10 +79,17 @@ where
     <T as std::str::FromStr>::Err: std::fmt::Debug,
 {
     let mut col = Vec::new();
-    reader.lines().take(n as usize).for_each(|line| {
-        let d = line.unwrap().parse::<T>().unwrap();
-        col.push(d);
-    });
+    if n == 0 {
+        reader.lines().for_each(|line| {
+            let d = line.unwrap().parse::<T>().unwrap();
+            col.push(d);
+        });
+    } else {
+        reader.lines().take(n as usize).for_each(|line| {
+            let d = line.unwrap().parse::<T>().unwrap();
+            col.push(d);
+        });
+    }
     col
 }
 
