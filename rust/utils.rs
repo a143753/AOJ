@@ -119,14 +119,25 @@ where
     <T as std::str::FromStr>::Err: std::fmt::Debug,
 {
     let mut matrix = Vec::new();
-    reader.lines().take(n as usize).for_each(|line| {
-        let dt = line
-            .unwrap()
-            .split_whitespace()
-            .map(|x| x.parse::<T>().unwrap())
-            .collect::<Vec<_>>();
-        matrix.push(dt);
-    });
+    if n == 0 {
+        reader.lines().for_each(|line| {
+            let dt = line
+                .unwrap()
+                .split_whitespace()
+                .map(|x| x.parse::<T>().unwrap())
+                .collect::<Vec<_>>();
+            matrix.push(dt);
+        });
+    } else {
+        reader.lines().take(n as usize).for_each(|line| {
+            let dt = line
+                .unwrap()
+                .split_whitespace()
+                .map(|x| x.parse::<T>().unwrap())
+                .collect::<Vec<_>>();
+            matrix.push(dt);
+        });
+    }
     matrix
 }
 
