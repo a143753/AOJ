@@ -212,3 +212,32 @@ fn join(v: &Vec<usize>) -> String {
         .collect::<Vec<_>>()
         .join(" ")
 }
+
+
+fn factorize1(mut n: i64) -> Vec<(i64, i64)> {
+	let mut res = Vec::new();
+	let mut i = 2;
+	while i * i <= n {
+		if n % i == 0 {
+			let mut cnt = 0;
+			while n % i == 0 {
+				n /= i;
+				cnt += 1;
+			}
+			res.push((i, cnt));
+		}
+		i += 1;
+	}
+	if n != 1 {
+		res.push((n, 1));
+	}
+	res
+}
+
+fn values(f:Vec<(i64,i64)>)->Vec<i64>{
+	let mut res = Vec::new();
+	for (p, _) in f {
+		res.push(p);
+	}
+	res
+}
