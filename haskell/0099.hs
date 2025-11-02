@@ -1,28 +1,58 @@
--- memory limit exceeded
-import Data.List
-import Text.Printf
+import Control.Monad (forM_, when)
+import Control.Monad.ST
+import Data.Array.ST 
+import Data.Array (Array)
+import Data.STRef (newSTRef, readSTRef, writeSTRef,modifySTRef')
+import Debug.Trace (traceShow)
 
-ans' x = maximumBy (\(a,b) (c,d) -> if b /= d
-                                    then compare b d
-                                    else compare c a ) x
+srch :: STUArray s Int Int -> ST s (Int, Int)
+srch arr = do
+  (l, r) <- getBounds arr
+  v0 <- readArray arr l
+  ci <- newSTRef l
+  cv <- newSTRef v0
+  forM_ [l+1..r] $ \ i -> do
+    v <- readArray arr i
+    mv <- readSTRef cv
+    when (v > mv) $ writeSTRef ci i >> writeSTRef cv v
+  (,) <$> readSTRef ci <*> readSTRef cv
+    
+--updateMax :: Int -> Int -> Int -> Int -> Array Int Int -> (Int, Int)
+new_max newidx newval curidx curval newarr
+  | newidx == curidx && newval > curval = pure (newidx, newval)
+  | newidx == curidx                    = srch newarr
+  | curval > newval                     = pure (curidx, curval)
+  | curval == newval                    = pure $ if curidx < newidx then (curidx, curval) else (newidx, newval)
+  | otherwise                           = pure (newidx, newval)
 
-update ((a,b):x) (c,d) =
-  if a == c
-  then (a,b+d):x
-  else (a,b):(update x (c,d))
+ans :: Int -> [[Int]] -> [(Int, Int)]
+ans n c = runST $ do
+  arr  <- newArray (1, n) 0 :: ST s (STUArray s Int Int)
+  curidx <- newSTRef 0
+  curval <- newSTRef 0
+  curlog <- newSTRef []
+  
+  forM_ c $ \ [i,v] -> do
+    x <- readArray arr i
+    
+    let newval = x + v
+    let newidx = i
+    writeArray arr newidx newval
+    
+    curidx' <- readSTRef curidx
+    curval' <- readSTRef curval
+    
+    (tmpidx,tmpval) <- new_max newidx newval curidx' curval' arr
 
-ans t [] = []
-ans t (i:is) =
-  let u = update t i
-      a = ans' u
-  in
-    a:(ans u is)
+    writeSTRef curidx tmpidx
+    writeSTRef curval tmpval
+    
+    modifySTRef' curlog ((tmpidx, tmpval):)
+    
+  reverse <$> readSTRef curlog
       
 main = do
-  l <- getLine
-  c <- getContents
-  let [n,q] = map read $ words l :: [Int]
-      i = map (\[a,b] -> (a,b)) $ map (map read) $ map words $ lines c :: [(Int,Int)]
-      o = ans (zip [1..n] $ repeat 0 ) i
-  mapM_ (\ (a,b) -> printf "%d %d\n" a b) o
-
+  [n,_] <- map read <$> words <$> getLine :: IO [Int]
+  c <- map ((map read) . words) <$> lines <$> getContents :: IO [[Int]]
+  let o = ans n c
+  mapM_ (\e -> putStrLn $ unwords $ map show [fst e, snd e] ) o
