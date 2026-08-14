@@ -35,3 +35,9 @@ main = do
   a <- map read <$> words <$> getLine :: IO [Mod]
   let o = ans n a
   print o
+
+{-
+当初,combinationを囲んだ2重ループとして実装していたが,式変形を工夫すると
+2項定理を使ってcombinationと内側のloopをなくすことができる。
+それによってTLEから抜けることができた。
+-}

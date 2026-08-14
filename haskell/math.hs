@@ -66,3 +66,56 @@ combinations n xs = comb n xs [] [] where
   comb _ []     _  zs = zs
   comb n (x:xs) ys zs = comb (n - 1) xs (x:ys) (comb n xs ys zs)
 
+-- powMod, combのmodで使う素数
+p :: Mod
+p = 998244353
+
+-- べき乗計算(mod p)
+powMod :: Mod -> Mod -> Mod
+powMod x n = go x n 1
+  where
+    go _ 0 acc = acc
+    go a b acc
+      | odd b     = go (a * a `mod` p) (b `div` 2) (acc * a `mod` p)
+      | otherwise = go (a * a `mod` p) (b `div` 2) acc
+
+-- 組み合わせ計算。階乗計算を都度行なう版
+comb :: Mod -> Mod -> Mod
+comb n k0
+  | k0 < 0 || k0 > n = 0
+  | otherwise =
+      numerator * powMod denominator (p - 2) `mod` p
+  where
+    k = min k0 (n - k0)
+    numerator =
+      foldl
+        (\acc i -> acc * ((n - i + 1) `mod` p) `mod` p)
+        1
+        [1 .. k]
+    denominator =
+      foldl
+        (\acc i -> acc * i `mod` p)
+        1
+        [1 .. k]
+
+prep :: Int -> ([Mod],[Mod])
+prep n = (fact,ifact)
+  where
+    fact  = map (\k -> foldl'
+                       (\acc i -> acc * fromIntegral(i) `mod` p)
+                       (1::Mod)
+                       [1 .. k]
+                ) [0..n] 
+    ifact = map (\k -> powMod k (p - 2) `mod` p) fact
+
+-- 組み合わせ計算。階乗計算でtableを参照する版
+comb' :: ([Mod],[Mod]) -> Mod -> Mod -> Mod
+comb' (fact,ifact) n k0
+  | k0 < 0 || k0 > n = 0
+  | otherwise =
+      ( numer1 * denom1 `mod` p ) * denom2 `mod` p
+  where
+    k = min k0 (n - k0)
+    numer1 = fact!!(fromIntegral n)
+    denom1 = ifact!!(fromIntegral k) 
+    denom2 = ifact!!(fromIntegral (n-k))
